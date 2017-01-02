@@ -1,6 +1,3 @@
-require Logger
-require IO
-
 defmodule SimilarfilmsPhoenix.GetData do
   def get_data(path) do
     HTTPotion.start
