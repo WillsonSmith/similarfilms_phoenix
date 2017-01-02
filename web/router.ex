@@ -17,6 +17,7 @@ defmodule SimilarfilmsPhoenix.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+    resources "/similar", SimilarController, only: [:index, :show]
   end
 
   # Other scopes may use custom stacks.

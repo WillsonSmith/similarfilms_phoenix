@@ -1,0 +1,3 @@
+<div class="container group">
+  <%= render SimilarfilmsPhoenix.SharedPartialsView, "results.html", conn: @conn, results: @results %>
+</div>

@@ -20,7 +20,7 @@
     <nav class="navigation">
       <ul class="connected-wrapper">
         <li class="connected-wrapper__item connected-wrapper__item--is-active">
-          <a href="{{url_for('index')}}">Home</a>
+          <a href="/">Home</a>
         </li>
         <li class="connected-wrapper__item">
           <a href="{{url_for('mine')}}">Mine</a>
