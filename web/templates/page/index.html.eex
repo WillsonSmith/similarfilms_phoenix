@@ -1,7 +1,5 @@
 <!-- {% include "partials/title.html" %} -->
-<div class="page-title">
-  <h1 class="page-title__heading"> Title </h1>
-</div>
+<%= render SimilarfilmsPhoenix.SharedPartialsView, "title.html", title: "Popular" %>
 
 <div class="container group">
   <%= for result <- @results do %>

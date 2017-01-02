@@ -19,10 +19,10 @@
 
     <nav class="navigation">
       <ul class="connected-wrapper">
-        <li class="connected-wrapper__item{% if page=='home'%} connected-wrapper__item--is-active{% endif -%}">
+        <li class="connected-wrapper__item connected-wrapper__item--is-active">
           <a href="{{url_for('index')}}">Home</a>
         </li>
-        <li class="connected-wrapper__item{% if page=='mine'%} connected-wrapper__item--is-active{% endif -%}">
+        <li class="connected-wrapper__item">
           <a href="{{url_for('mine')}}">Mine</a>
         </li>
       </ul>
