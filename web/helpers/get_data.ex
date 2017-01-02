@@ -10,7 +10,7 @@ defmodule SimilarfilmsPhoenix.GetData do
     |> Map.get(:body)
     |> Poison.decode!
 
-    results = response["results"]
+    results = response["results"] || []
     results
   end
 end

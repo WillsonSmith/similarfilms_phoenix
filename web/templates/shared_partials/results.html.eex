@@ -1,3 +1,6 @@
+<%= if length(@results) < 1 do %>
+  <%= render SimilarfilmsPhoenix.SharedPartialsView, "title.html", title: "No results" %>
+<% end %>
 <%= for result <- @results do %>
   <div class="movie-result">
     <div class="movie-result__tweet">
