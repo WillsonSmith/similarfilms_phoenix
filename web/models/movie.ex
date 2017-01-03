@@ -11,13 +11,16 @@ defmodule SimilarfilmsPhoenix.Movie do
   end
 
   @doc """
-  Builds a changeset based on the `struct` and `params`.
+  Sort movies by popularity so most popular is first
   """
   def sorted(query) do
     from movie in query,
     order_by: [desc: movie.popularity]
   end
 
+  @doc """
+  Builds a changeset based on the `struct` and `params`.
+  """
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:movie_id, :title, :rating, :image_url])
