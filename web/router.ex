@@ -17,6 +17,7 @@ defmodule SimilarfilmsPhoenix.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", IndexController, :index
+    resources "/movies", MovieController
     resources "/similar", SimilarController, only: [:index, :show]
   end
 
