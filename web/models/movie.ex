@@ -13,6 +13,11 @@ defmodule SimilarfilmsPhoenix.Movie do
   @doc """
   Builds a changeset based on the `struct` and `params`.
   """
+  def sorted(query) do
+    from movie in query,
+    order_by: [desc: movie.popularity]
+  end
+
   def changeset(struct, params \\ %{}) do
     struct
     |> cast(params, [:movie_id, :title, :rating, :image_url])
