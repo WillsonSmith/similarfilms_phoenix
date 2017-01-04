@@ -2,7 +2,7 @@ defmodule SimilarfilmsPhoenix.MovieControllerTest do
   use SimilarfilmsPhoenix.ConnCase
 
   alias SimilarfilmsPhoenix.Movie
-  @valid_attrs %{image_url: "some content", movie_id: 42, rating: "some content", title: "some content"}
+  @valid_attrs %{image_url: "some content", movie_id: 42, popularity: "120.5", rating: "120.5", title: "some content"}
   @invalid_attrs %{}
 
   test "lists all entries on index", %{conn: conn} do

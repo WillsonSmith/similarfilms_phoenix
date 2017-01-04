@@ -4,7 +4,7 @@ defmodule SimilarfilmsPhoenix.Movie do
   schema "movies" do
     field :movie_id, :integer
     field :title, :string
-    field :rating, :string
+    field :rating, :decimal
     field :image_url, :string
     field :popularity, :decimal
 

@@ -22,6 +22,11 @@
     <%= @movie.image_url %>
   </li>
 
+  <li>
+    <strong>Popularity:</strong>
+    <%= @movie.popularity %>
+  </li>
+
 </ul>
 
 <%= link "Edit", to: movie_path(@conn, :edit, @movie) %>

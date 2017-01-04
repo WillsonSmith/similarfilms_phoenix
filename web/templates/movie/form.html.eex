@@ -19,7 +19,7 @@
 
   <div class="form-group">
     <%= label f, :rating, class: "control-label" %>
-    <%= text_input f, :rating, class: "form-control" %>
+    <%= number_input f, :rating, step: "any", class: "form-control" %>
     <%= error_tag f, :rating %>
   </div>
 
@@ -31,7 +31,7 @@
 
   <div class="form-group">
     <%= label f, :popularity, class: "control-label" %>
-    <%= number_input f, :popularity, class: "form-control" %>
+    <%= number_input f, :popularity, step: "any", class: "form-control" %>
     <%= error_tag f, :popularity %>
   </div>
 

@@ -1,3 +1,4 @@
+import IEx
 import IO
 
 defmodule SimilarfilmsPhoenix.GetData do
@@ -8,6 +9,14 @@ defmodule SimilarfilmsPhoenix.GetData do
     else
       key
     end
+  end
+
+  def insert_movie(movie) do
+    movie_atoms = Enum.reduce(movie, %{}, fn({key, val}, acc) -> Map.put(acc, String.to_atom(key), val) end)
+
+    m = %SimilarfilmsPhoenix.Movie{}
+    |> Map.merge(movie_atoms)
+    |> SimilarfilmsPhoenix.Repo.insert
   end
 
   def transform_api_results({key, val}, acc) do
@@ -24,6 +33,10 @@ defmodule SimilarfilmsPhoenix.GetData do
 
     transformed_results = api_results["results"]
     |> Enum.map(fn(movie) -> Enum.reduce(movie, %{}, &transform_api_results/2) end)
+
+    Enum.each(transformed_results, &insert_movie/1)
+
+    transformed_results
   end
 
   def get_database_movies do
@@ -36,8 +49,9 @@ defmodule SimilarfilmsPhoenix.GetData do
 
   def get_data(path) do
     database_movies = get_database_movies
-    # api_movies = get_api_movies(path)
-    # api_movies || []
-    database_movies || []
+    api_movies = get_api_movies(path)
+
+    api_movies || []
+    # database_movies || []
   end
 end
