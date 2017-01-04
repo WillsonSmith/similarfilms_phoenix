@@ -12,13 +12,14 @@ defmodule SimilarfilmsPhoenix.GetData do
   end
 
   def insert_movie(movie) do
-    #this should probably be a model thing?
+    #this should probably be a model thing
+    #also can probably use insert_or_update w/ a changeset
     atomized_movie = Enum.reduce(movie, %{}, fn({key, val}, acc) -> Map.put(acc, String.to_atom(key), val) end)
     query = SimilarfilmsPhoenix.Movie
     |> SimilarfilmsPhoenix.Repo.get_by(movie_id: atomized_movie[:movie_id])
 
-    if is_nil(query) do
-      m = %SimilarfilmsPhoenix.Movie{}
+    m = if is_nil(query) do
+      %SimilarfilmsPhoenix.Movie{}
       |> Map.merge(atomized_movie)
       |> SimilarfilmsPhoenix.Repo.insert
     end
@@ -29,6 +30,7 @@ defmodule SimilarfilmsPhoenix.GetData do
   end
 
   def get_api_movies(path) do
+    #check for updates here first - don't fetch if unnecessary
     HTTPotion.start
     api = Application.get_env(:similarfilms_phoenix, SimilarfilmsPhoenix.ApiKey)[:moviedb_api_key]
     host = "api.themoviedb.org"
@@ -38,7 +40,11 @@ defmodule SimilarfilmsPhoenix.GetData do
 
     transformed_results = api_results["results"]
     |> Enum.map(fn(movie) -> Enum.reduce(movie, %{}, &transform_api_results/2) end)
+    
+    transformed_results
     |> Enum.each&insert_movie/1
+
+    transformed_results
   end
 
   def get_database_movies do
@@ -50,9 +56,11 @@ defmodule SimilarfilmsPhoenix.GetData do
   end
 
   def get_data(path) do
-    api_movies = get_api_movies(path)
     database_movies = get_database_movies
-
-    database_movies || []
+    movies = if (length(database_movies) < 1) do
+       get_api_movies(path) || []
+    else
+      database_movies
+    end
   end
 end
