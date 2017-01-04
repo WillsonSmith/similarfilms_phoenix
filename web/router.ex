@@ -13,6 +13,12 @@ defmodule SimilarfilmsPhoenix.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/api", SimilarfilmsPhoenix do
+    pipe_through :api
+
+    resources "/movies", MovieApiController, only: [:index]
+  end
+
   scope "/", SimilarfilmsPhoenix do
     pipe_through :browser # Use the default browser stack
 
