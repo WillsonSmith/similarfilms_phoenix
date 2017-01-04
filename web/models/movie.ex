@@ -6,6 +6,7 @@ defmodule SimilarfilmsPhoenix.Movie do
     field :title, :string
     field :rating, :string
     field :image_url, :string
+    field :popularity, :decimal
 
     timestamps()
   end
@@ -23,7 +24,7 @@ defmodule SimilarfilmsPhoenix.Movie do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:movie_id, :title, :rating, :image_url])
-    |> validate_required([:movie_id, :title, :rating, :image_url])
+    |> cast(params, [:movie_id, :title, :rating, :image_url, :popularity])
+    |> validate_required([:movie_id, :title, :rating, :image_url, :popularity])
   end
 end

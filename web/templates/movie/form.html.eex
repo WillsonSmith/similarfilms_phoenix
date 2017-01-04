@@ -30,6 +30,12 @@
   </div>
 
   <div class="form-group">
+    <%= label f, :popularity, class: "control-label" %>
+    <%= number_input f, :popularity, class: "form-control" %>
+    <%= error_tag f, :popularity %>
+  </div>
+
+  <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>
