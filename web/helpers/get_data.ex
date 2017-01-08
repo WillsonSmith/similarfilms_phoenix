@@ -76,6 +76,10 @@ defmodule SimilarfilmsPhoenix.GetData do
   end
 
   def get_popular do
+    # movie_query = SimilarfilmsPhoenix.Movie
+    # |> SimilarfilmsPhoenix.Movie.sorted
+    # |> SimilarfilmsPhoenix.Repo.all
+
     popular_query = SimilarfilmsPhoenix.Popular
     |> SimilarfilmsPhoenix.Repo.all
 
@@ -88,6 +92,9 @@ defmodule SimilarfilmsPhoenix.GetData do
     else
       Enum.map(popular_query, &db_popular/1)
       |> Enum.filter(fn(movie) -> !is_nil(movie) end)
+      # movie_query
+      # |> Enum.map(fn(movie) -> Map.from_struct(movie) end)
+      # |> Enum.map(fn(movie) -> Enum.reduce(movie, %{}, fn({key, val}, acc) -> Map.put(acc, Atom.to_string(key), val) end) end)
     end
   end
 
