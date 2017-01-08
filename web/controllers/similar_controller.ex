@@ -7,7 +7,7 @@ defmodule SimilarfilmsPhoenix.SimilarController do
   end
 
   def show(conn, %{"id" => movie_id}) do
-    data = get_data("/3/movie/#{movie_id}/similar_movies")
+    data = get_similar(movie_id)
     render conn, "show.html", results: data
   end
 end

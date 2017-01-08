@@ -1,6 +1,3 @@
-import IEx
-import IO
-
 defmodule SimilarfilmsPhoenix.GetData do
   def build_key(key) do
     transforms = %{"id" => "movie_id", "vote_average" => "rating", "poster_path" => "image_url"}
@@ -43,7 +40,6 @@ defmodule SimilarfilmsPhoenix.GetData do
   end
 
   def get_api_movies(path) do
-    #check for updates here first - don't fetch if unnecessary
     HTTPotion.start
     api = Application.get_env(:similarfilms_phoenix, SimilarfilmsPhoenix.ApiKey)[:moviedb_api_key]
     host = "api.themoviedb.org"
@@ -93,13 +89,7 @@ defmodule SimilarfilmsPhoenix.GetData do
     end
   end
 
-  def get_data(path) do
-    database_movies = get_database_movies
-
-    movies = if (length(database_movies) < 1) do
-       get_api_movies(path) || []
-    else
-      database_movies
-    end
+  def get_similar(movie_id) do
+    get_api_movies("/3/movie/#{movie_id}/similar_movies") || []
   end
 end
