@@ -2,7 +2,7 @@ defmodule SimilarfilmsPhoenix.SimilarController do
   use SimilarfilmsPhoenix.Web, :controller
 
   def index(conn, _params) do
-    data = get_data("/3/movie/popular")
+    data = get_popular
     render conn, "index.html", results: data
   end
 

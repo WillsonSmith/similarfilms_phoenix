@@ -23,7 +23,7 @@ defmodule SimilarfilmsPhoenix.GetData do
     Enum.reduce(movie, %{}, fn({key, val}, acc) -> Map.put(acc, if is_binary(key) do String.to_atom(key) end, val) end)
   end
 
-  def insert_movie(movie) do
+  def store_movie_result(movie) do
     query = SimilarfilmsPhoenix.Movie
     |> SimilarfilmsPhoenix.Repo.get_by(movie_id: movie[:movie_id])
 
@@ -49,6 +49,11 @@ defmodule SimilarfilmsPhoenix.GetData do
 
     transformed_results = api_results["results"]
     |> Enum.map(fn(movie) -> Enum.reduce(movie, %{}, &transform_api_results/2) end)
+
+
+    Enum.map(transformed_results, &atomize_movie/1)
+    |> Enum.each(&store_movie_result/1)
+    transformed_results
   end
 
   def get_database_movies do
@@ -76,9 +81,6 @@ defmodule SimilarfilmsPhoenix.GetData do
 
     movies = if (length(popular_query) < 1) do
       results = get_api_movies("/3/movie/popular") || []
-      
-      Enum.map(results, &atomize_movie/1)
-      |> Enum.each(&insert_movie/1)
 
       Enum.map(results, &atomize_movie/1)
       |> Enum.each(&add_to_popular/1)
