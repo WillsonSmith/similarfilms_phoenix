@@ -56,10 +56,8 @@ defmodule SimilarfilmsPhoenix.GetData do
     transformed_results
   end
 
-  def get_database_movies do
-    query = SimilarfilmsPhoenix.Movie
-    |> SimilarfilmsPhoenix.Movie.sorted
-    |> SimilarfilmsPhoenix.Repo.all
+  def transform_db_movies(movies) do
+    movies
     |> Enum.map(fn(movie) -> Map.from_struct(movie) end)
     |> Enum.map(fn(movie) -> Enum.reduce(movie, %{}, fn({key, val}, acc) -> Map.put(acc, Atom.to_string(key), val) end) end)
   end
@@ -76,11 +74,6 @@ defmodule SimilarfilmsPhoenix.GetData do
   end
 
   def get_popular do
-    # movie_query = SimilarfilmsPhoenix.Movie
-    # |> SimilarfilmsPhoenix.Movie.limited(20)
-    # |> SimilarfilmsPhoenix.Movie.sorted
-    # |> SimilarfilmsPhoenix.Repo.all
-
     popular_query = SimilarfilmsPhoenix.Popular
     |> SimilarfilmsPhoenix.Repo.all
 
@@ -93,9 +86,12 @@ defmodule SimilarfilmsPhoenix.GetData do
     else
       Enum.map(popular_query, &db_popular/1)
       |> Enum.filter(fn(movie) -> !is_nil(movie) end)
-      # movie_query
-      # |> Enum.map(fn(movie) -> Map.from_struct(movie) end)
-      # |> Enum.map(fn(movie) -> Enum.reduce(movie, %{}, fn({key, val}, acc) -> Map.put(acc, Atom.to_string(key), val) end) end)
+      
+      # db_popular = SimilarfilmsPhoenix.Movie
+      # |> SimilarfilmsPhoenix.Movie.limited(20)
+      # |> SimilarfilmsPhoenix.Movie.sorted
+      # |> SimilarfilmsPhoenix.Repo.all
+      # |> transform_db_movies
     end
   end
 
