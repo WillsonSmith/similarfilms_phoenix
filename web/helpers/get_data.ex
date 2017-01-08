@@ -11,18 +11,31 @@ defmodule SimilarfilmsPhoenix.GetData do
     end
   end
 
+  def add_to_popular(movie) do
+    popular_query = SimilarfilmsPhoenix.Popular
+    |> SimilarfilmsPhoenix.Repo.get_by(movie_id: movie[:movie_id])
+
+    if is_nil(popular_query) do
+      %SimilarfilmsPhoenix.Popular{movie_id: movie[:movie_id]}
+      |>SimilarfilmsPhoenix.Repo.insert
+    end
+    movie
+  end
+
+  def atomize_movie(movie \\ []) do
+    Enum.reduce(movie, %{}, fn({key, val}, acc) -> Map.put(acc, if is_binary(key) do String.to_atom(key) end, val) end)
+  end
+
   def insert_movie(movie) do
-    #this should probably be a model thing
-    #also can probably use insert_or_update w/ a changeset
-    atomized_movie = Enum.reduce(movie, %{}, fn({key, val}, acc) -> Map.put(acc, String.to_atom(key), val) end)
     query = SimilarfilmsPhoenix.Movie
-    |> SimilarfilmsPhoenix.Repo.get_by(movie_id: atomized_movie[:movie_id])
+    |> SimilarfilmsPhoenix.Repo.get_by(movie_id: movie[:movie_id])
 
     m = if is_nil(query) do
       %SimilarfilmsPhoenix.Movie{}
-      |> Map.merge(atomized_movie)
+      |> Map.merge(movie)
       |> SimilarfilmsPhoenix.Repo.insert
     end
+    movie
   end
 
   def transform_api_results({key, val}, acc) do
@@ -40,11 +53,6 @@ defmodule SimilarfilmsPhoenix.GetData do
 
     transformed_results = api_results["results"]
     |> Enum.map(fn(movie) -> Enum.reduce(movie, %{}, &transform_api_results/2) end)
-    
-    transformed_results
-    |> Enum.each&insert_movie/1
-
-    transformed_results
   end
 
   def get_database_movies do
@@ -55,8 +63,39 @@ defmodule SimilarfilmsPhoenix.GetData do
     |> Enum.map(fn(movie) -> Enum.reduce(movie, %{}, fn({key, val}, acc) -> Map.put(acc, Atom.to_string(key), val) end) end)
   end
 
+  def db_popular(movie) do
+    query = SimilarfilmsPhoenix.Movie
+    |> SimilarfilmsPhoenix.Repo.get_by(movie_id: movie.movie_id)
+
+    if (!is_nil(query)) do
+      query
+      |> Map.from_struct
+      |> Enum.reduce(%{}, fn({key, val}, acc) -> Map.put(acc, Atom.to_string(key), val) end)
+    end
+  end
+
+  def get_popular do
+    popular_query = SimilarfilmsPhoenix.Popular
+    |> SimilarfilmsPhoenix.Repo.all
+
+    movies = if (length(popular_query) < 1) do
+      results = get_api_movies("/3/movie/popular") || []
+      
+      Enum.map(results, &atomize_movie/1)
+      |> Enum.each(&insert_movie/1)
+
+      Enum.map(results, &atomize_movie/1)
+      |> Enum.each(&add_to_popular/1)
+      results
+    else
+      Enum.map(popular_query, &db_popular/1)
+      |> Enum.filter(fn(movie) -> !is_nil(movie) end)
+    end
+  end
+
   def get_data(path) do
     database_movies = get_database_movies
+
     movies = if (length(database_movies) < 1) do
        get_api_movies(path) || []
     else
