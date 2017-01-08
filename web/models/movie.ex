@@ -14,6 +14,12 @@ defmodule SimilarfilmsPhoenix.Movie do
   @doc """
   Sort movies by popularity so most popular is first
   """
+
+  def limited(query, number) do
+    from movie in query,
+    limit: ^number
+  end
+
   def sorted(query) do
     from movie in query,
     order_by: [desc: movie.popularity]

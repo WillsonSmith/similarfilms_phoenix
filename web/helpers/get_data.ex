@@ -77,6 +77,7 @@ defmodule SimilarfilmsPhoenix.GetData do
 
   def get_popular do
     # movie_query = SimilarfilmsPhoenix.Movie
+    # |> SimilarfilmsPhoenix.Movie.limited(20)
     # |> SimilarfilmsPhoenix.Movie.sorted
     # |> SimilarfilmsPhoenix.Repo.all
 
